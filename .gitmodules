@@ -1,0 +1,6 @@
+[submodule "firmware/vendor/yaamake"]
+	path = firmware/vendor/yaamake
+	url = https://github.com/raphendyr/yaamake.git
+[submodule "firmware/vendor/yaal"]
+	path = firmware/vendor/yaal
+	url = https://github.com/megari/yaal.git
