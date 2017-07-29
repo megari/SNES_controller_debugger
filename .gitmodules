@@ -3,4 +3,4 @@
 	url = https://github.com/raphendyr/yaamake.git
 [submodule "firmware/vendor/yaal"]
 	path = firmware/vendor/yaal
-	url = https://github.com/megari/yaal.git
+	url = https://github.com/raphendyr/yaal.git
