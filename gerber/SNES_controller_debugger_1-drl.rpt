@@ -1,5 +1,5 @@
-Drill report for /home/megari/SNES_controller_debugger/SNES_controller_debugger_1.kicad_pcb
-Created on Sun 06 Aug 2017 02:38:43 PM EEST
+Drill report for /home/ari/SNES_controller_debugger/SNES_controller_debugger_1.kicad_pcb
+Created on Mon 07 Aug 2017 06:57:28 PM EEST
 
 Copper Layer Stackup:
     =============================================================
@@ -10,14 +10,14 @@ Copper Layer Stackup:
 Drill file 'SNES_controller_debugger_1.drl' contains
     plated through holes:
     =============================================================
-    T1  0.40mm  0.016"  (23 holes)
-    T2  0.50mm  0.020"  (8 holes)  (with 2 slots)
+    T1  0.40mm  0.016"  (31 holes)
+    T2  0.50mm  0.020"  (2 holes)  (with 2 slots)
     T3  0.55mm  0.022"  (2 holes)  (with 2 slots)
     T4  1.00mm  0.039"  (22 holes)
     T5  1.10mm  0.043"  (4 holes)
     T6  1.30mm  0.051"  (7 holes)
 
-    Total plated holes count 66
+    Total plated holes count 68
 
 
 Drill file 'SNES_controller_debugger_1-NPTH.drl' contains
