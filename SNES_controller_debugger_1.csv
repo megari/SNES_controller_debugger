@@ -10,7 +10,7 @@
 9;"R2,R3";"R_0805_HandSoldering";2;"22";;;
 10;"RV1";"Potentiometer_Trimmer_Vishay_TS53YL";1;"POT";;;
 11;"J2";"SNES_controller_port";1;"CONTROLLER_OUT";;;
-12;"D1,D2";"D_SOD-123";2;"";;;
-13;"F1";"R_0603_HandSoldering";1;"Polyfuse";;;
+12;"D1,D2";"D_SOD-123";2;"MBR0520";;;
+13;"F1";"R_0603_HandSoldering";1;"500mA";;;
 14;"SW1";"SW_PUSH_6mm";1;"Reset_switch";;;
 15;"Y1";"Crystal_SMD_5032-2pin_5.0x3.2mm_HandSoldering";1;"16MHz";;;
