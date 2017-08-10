@@ -319,15 +319,16 @@ void main() {
     while (1) {
         buttons_saved = buttons & VALID_BUTTON_MASK;
 
-        // Turn the display driver off if we're idle
-        // TODO: turn the backlight off as well (requires revised hw)
+        // Turn the display driver and backlight off if we're idle
         // TODO: possibly dim the backlight after a smaller amount of time?
         if (idle_count == IDLE_MAX && !disp_off) {
             lcd.display_control(false, false, false);
+            PORTD &= ~(_BV(PORTD0));
             disp_off = true;
         }
         else if (idle_count < IDLE_MAX && disp_off) {
             lcd.display_control(true, false, false);
+            PORTD |= _BV(PORTD0);
             disp_off = false;
         }
 
