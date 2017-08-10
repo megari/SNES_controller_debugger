@@ -230,9 +230,18 @@ void main() {
     // Re-enable interrupts globally.
     sei();
 
+    // Turn the LCD screen off and on to re-initialize it if the MCU was reset.
+    DDRF |= _BV(DDF1);
+    PORTF &= ~(_BV(PORTF1));
+    _delay_ms(100);
+    PORTF |= _BV(PORTF1);
+    _delay_ms(100);
+
+    // Turn the LCD backlight on.
+    DDRD |= _BV(DDD0);
+    PORTD |= _BV(PORTD0);
+
     // Initialize the LCD screen.
-    // TODO: Make the initialization work even after reset
-    //       (may require revised hw)
     LCD lcd;
     lcd.setup();
 
