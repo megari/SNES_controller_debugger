@@ -14,3 +14,7 @@
 13;"F1";"R_0603_HandSoldering";1;"500mA";;;
 14;"SW1";"SW_PUSH_6mm";1;"Reset_switch";;;
 15;"Y1";"Crystal_SMD_5032-2pin_5.0x3.2mm_HandSoldering";1;"16MHz";;;
+16;"Q1,Q2";"SOT-23";2;"DMG2302UK-7";;;
+17;"R4,R8";"R_0603_HandSoldering";2;"1M";;;
+18;"R5,R7";"R_0603_HandSoldering";2;"220";;;
+19;"R6";"R_0603_HandSoldering";1;"0";;;
