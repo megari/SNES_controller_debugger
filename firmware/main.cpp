@@ -204,16 +204,55 @@ static void setup_clock() {
 // D4-D7
 typedef Pinset<PortB4, PortD7, PortD6, PortD4> FourBitSet;
 // RS, RW, E
-typedef LCDInterface<PortF5, PortF6, PortF7, FourBitSet> FourBitInterface;
+typedef PortF5 RSPin;
+typedef PortF6 RWPin;
+typedef PortF7 EPin;
+typedef LCDInterface<RSPin, RWPin, EPin, FourBitSet> FourBitInterface;
 // Use an LCD screen with 4 lines, 5x8 font
 typedef LiquidCrystalHD44780<FourBitInterface, 4, false> LCD;
 
+static void lcd_power(bool power) {
+    if (power) {
+        PORTF |= _BV(PORTF1);
+    } else {
+        // Cut power to the LCD.
+        PORTF &= ~(_BV(PORTF1));
+
+        // Make sure the LCD is not powered by any of the I/O pins.
+        RSPin rs;
+        RWPin rw;
+        EPin e;
+        FourBitSet data;
+        rs.mode = OUTPUT;
+        rw.mode = OUTPUT;
+        e.mode = OUTPUT;
+        data.set_output();
+        rs = false;
+        rw = false;
+        e = false;
+        data = 0x00;
+    }
+}
+
+static void lcd_backlight(bool backlight) {
+    if (backlight)
+        PORTD |= _BV(PORTD0);
+    else
+        PORTD &= ~(_BV(PORTD0));
+}
+
 void main() {
-    // Set PortC7 as input so we can read the incoming controller data.
+    // Set PortC7 as input for reading the incoming controller data.
     // Enable pull-up resistors so that the readings show no buttons
     // pressed when there is no controller connected.
     DDRC &= ~(_BV(DDC7));
     PORTC |= _BV(PORTC7);
+
+    // Set PortD0 as output for controlling the LCD backlight.
+    DDRD |= _BV(DDD0);
+
+    // Set PortF1 as output for controlling power to the LCD.
+    DDRF |= _BV(DDF1);
 
     // Disable interrupts globally while we configure PWM.
     cli();
@@ -231,15 +270,13 @@ void main() {
     sei();
 
     // Turn the LCD screen off and on to re-initialize it if the MCU was reset.
-    DDRF |= _BV(DDF1);
-    PORTF &= ~(_BV(PORTF1));
+    lcd_power(false);
     _delay_ms(100);
-    PORTF |= _BV(PORTF1);
+    lcd_power(true);
     _delay_ms(100);
 
     // Turn the LCD backlight on.
-    DDRD |= _BV(DDD0);
-    PORTD |= _BV(PORTD0);
+    lcd_backlight(true);
 
     // Initialize the LCD screen.
     LCD lcd;
@@ -323,12 +360,12 @@ void main() {
         // TODO: possibly dim the backlight after a smaller amount of time?
         if (idle_count == IDLE_MAX && !disp_off) {
             lcd.display_control(false, false, false);
-            PORTD &= ~(_BV(PORTD0));
+            lcd_backlight(false);
             disp_off = true;
         }
         else if (idle_count < IDLE_MAX && disp_off) {
             lcd.display_control(true, false, false);
-            PORTD |= _BV(PORTD0);
+            lcd_backlight(true);
             disp_off = false;
         }
 
