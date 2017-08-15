@@ -211,12 +211,14 @@ typedef LCDInterface<RSPin, RWPin, EPin, FourBitSet> FourBitInterface;
 // Use an LCD screen with 4 lines, 5x8 font
 typedef LiquidCrystalHD44780<FourBitInterface, 4, false> LCD;
 
+// Control the supply of power to the LCD.
+// Note that the logic for PortF1 is inverted because of using a P-MOSFET.
 static void lcd_power(bool power) {
     if (power) {
-        PORTF |= _BV(PORTF1);
+        PORTF &= ~(_BV(PORTF1));
     } else {
         // Cut power to the LCD.
-        PORTF &= ~(_BV(PORTF1));
+        PORTF |= _BV(PORTF1);
 
         // Make sure the LCD is not powered by any of the I/O pins.
         RSPin rs;
