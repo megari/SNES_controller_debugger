@@ -4,38 +4,6 @@
 
 using namespace yaal;
 
-template<typename PIN, bool polarity = true>
-class PowerPin {
-    PIN pin;
-
-public:
-    PowerPin() {
-        pin.mode = OUTPUT;
-        pin = polarity; // Initially on
-    }
-
-    void power(bool on) {
-        /*
-         * Truth table:
-         *
-         * polarity |  on | polarity ^ on | pin | power
-         * ---------+-----+---------------+-----+------
-         *     T    |  T  |       F       |  T  |  ON
-         *     T    |  F  |       T       |  F  |  OFF
-         *     F    |  T  |       T       |  F  |  ON
-         *     F    |  F  |       F       |  T  |  OFF
-         *
-         */
-        pin = !(polarity ^ on);
-    }
-};
-
-template<bool polarity>
-class PowerPin<NullPin, polarity> {
-public:
-    void power(bool) { }
-};
-
 enum SNES_button {
     BUTTON_B      = 0,
     BUTTON_Y      = 1,
@@ -239,36 +207,12 @@ typedef Pinset<PortB4, PortD7, PortD6, PortD4> FourBitSet;
 typedef PortF5 RSPin;
 typedef PortF6 RWPin;
 typedef PortF7 EPin;
-PowerPin<PortD0> backlight;
-PowerPin<PortF1, false> power; // The polarity is inverted because of using a P-MOSFET.
-typedef LCDInterface<RSPin, RWPin, EPin, FourBitSet> FourBitInterface;
+// Backlight, power
+typedef PowerPin<PortD0> Backlight;
+typedef PowerPin<PortF1, false> Power; // The polarity is inverted because of using a P-MOSFET.
+typedef LCDInterface<RSPin, RWPin, EPin, FourBitSet, Backlight, Power> FourBitInterface;
 // Use an LCD screen with 4 lines, 5x8 font
 typedef LiquidCrystalHD44780<FourBitInterface, 4, false> LCD;
-
-// Control the supply of power to the LCD.
-static void lcd_power(bool on) {
-    power.power(on);
-
-    if (!on) {
-        // Make sure the LCD is not powered by any of the I/O pins.
-        RSPin rs;
-        RWPin rw;
-        EPin e;
-        FourBitSet data;
-        rs.mode = OUTPUT;
-        rw.mode = OUTPUT;
-        e.mode = OUTPUT;
-        data.set_output();
-        rs = false;
-        rw = false;
-        e = false;
-        data = 0x00;
-    }
-}
-
-static void lcd_backlight(bool on) {
-    backlight.power(on);
-}
 
 void main() {
     // Set PortC7 as input for reading the incoming controller data.
@@ -293,13 +237,13 @@ void main() {
     sei();
 
     // Turn the LCD screen off and on to re-initialize it if the MCU was reset.
-    lcd_power(false);
+    LCD lcd;
+    lcd.set_power(false);
     _delay_ms(100);
-    lcd_power(true);
+    lcd.set_power(true);
     _delay_ms(100);
 
     // Initialize the LCD screen.
-    LCD lcd;
     lcd.setup();
 
     // Display on, cursor off, blink off.
@@ -380,12 +324,12 @@ void main() {
         // TODO: possibly dim the backlight after a smaller amount of time?
         if (idle_count == IDLE_MAX && !disp_off) {
             lcd.display_control(false, false, false);
-            lcd_backlight(false);
+            lcd.set_backlight(false);
             disp_off = true;
         }
         else if (idle_count < IDLE_MAX && disp_off) {
             lcd.display_control(true, false, false);
-            lcd_backlight(true);
+            lcd.set_backlight(true);
             disp_off = false;
         }
 
