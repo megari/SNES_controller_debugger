@@ -4,6 +4,38 @@
 
 using namespace yaal;
 
+template<typename PIN, bool polarity = true>
+class PowerPin {
+    PIN pin;
+
+public:
+    PowerPin() {
+        pin.mode = OUTPUT;
+        pin = polarity; // Initially on
+    }
+
+    void power(bool on) {
+        /*
+         * Truth table:
+         *
+         * polarity |  on | polarity ^ on | pin | power
+         * ---------+-----+---------------+-----+------
+         *     T    |  T  |       F       |  T  |  ON
+         *     T    |  F  |       T       |  F  |  OFF
+         *     F    |  T  |       T       |  F  |  ON
+         *     F    |  F  |       F       |  T  |  OFF
+         *
+         */
+        pin = !(polarity ^ on);
+    }
+};
+
+template<bool polarity>
+class PowerPin<NullPin, polarity> {
+public:
+    void power(bool) { }
+};
+
 enum SNES_button {
     BUTTON_B      = 0,
     BUTTON_Y      = 1,
@@ -207,19 +239,17 @@ typedef Pinset<PortB4, PortD7, PortD6, PortD4> FourBitSet;
 typedef PortF5 RSPin;
 typedef PortF6 RWPin;
 typedef PortF7 EPin;
+PowerPin<PortD0> backlight;
+PowerPin<PortF1, false> power; // The polarity is inverted because of using a P-MOSFET.
 typedef LCDInterface<RSPin, RWPin, EPin, FourBitSet> FourBitInterface;
 // Use an LCD screen with 4 lines, 5x8 font
 typedef LiquidCrystalHD44780<FourBitInterface, 4, false> LCD;
 
 // Control the supply of power to the LCD.
-// Note that the logic for PortF1 is inverted because of using a P-MOSFET.
-static void lcd_power(bool power) {
-    if (power) {
-        PORTF &= ~(_BV(PORTF1));
-    } else {
-        // Cut power to the LCD.
-        PORTF |= _BV(PORTF1);
+static void lcd_power(bool on) {
+    power.power(on);
 
+    if (!on) {
         // Make sure the LCD is not powered by any of the I/O pins.
         RSPin rs;
         RWPin rw;
@@ -236,11 +266,8 @@ static void lcd_power(bool power) {
     }
 }
 
-static void lcd_backlight(bool backlight) {
-    if (backlight)
-        PORTD |= _BV(PORTD0);
-    else
-        PORTD &= ~(_BV(PORTD0));
+static void lcd_backlight(bool on) {
+    backlight.power(on);
 }
 
 void main() {
@@ -249,12 +276,6 @@ void main() {
     // pressed when there is no controller connected.
     DDRC &= ~(_BV(DDC7));
     PORTC |= _BV(PORTC7);
-
-    // Set PortD0 as output for controlling the LCD backlight.
-    DDRD |= _BV(DDD0);
-
-    // Set PortF1 as output for controlling power to the LCD.
-    DDRF |= _BV(DDF1);
 
     // Disable interrupts globally while we configure PWM.
     cli();
@@ -276,9 +297,6 @@ void main() {
     _delay_ms(100);
     lcd_power(true);
     _delay_ms(100);
-
-    // Turn the LCD backlight on.
-    lcd_backlight(true);
 
     // Initialize the LCD screen.
     LCD lcd;
