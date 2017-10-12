@@ -781,7 +781,7 @@
     )
   )
 
-  (module SNES_Controller_Port:SNES_controller_port (layer F.Cu) (tedit 59A5E0BC) (tstamp 591E03F8)
+  (module SNES_Controller_Port:SNES_controller_port (layer F.Cu) (tedit 59DFC575) (tstamp 591E03F8)
     (at 146.5 150.1 90)
     (descr "SNES controller port")
     (tags "Through hole pin header THT 1x07 2.54mm single row")
@@ -956,7 +956,7 @@
     )
   )
 
-  (module Buttons_Switches_THT:SW_PUSH_6mm (layer F.Cu) (tedit 59A5E07B) (tstamp 591FB09C)
+  (module Buttons_Switches_THT:SW_PUSH_6mm (layer F.Cu) (tedit 59DFC55A) (tstamp 591FB09C)
     (at 134.95 155.65 180)
     (descr https://www.omron.com/ecb/products/pdf/en-b3f.pdf)
     (tags "tact sw push 6mm")

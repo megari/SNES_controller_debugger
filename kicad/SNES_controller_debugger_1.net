@@ -1,7 +1,7 @@
 (export (version D)
   (design
-    (source /home/ari/SNES_controller_debugger/SNES_controller_debugger_1.sch)
-    (date "Mon 21 Aug 2017 08:09:59 PM EEST")
+    (source /home/ari/SNES_controller_debugger/kicad/SNES_controller_debugger_1.sch)
+    (date "Thu 12 Oct 2017 10:38:30 PM EEST")
     (tool "Eeschema 4.0.7-e1-6374~58~ubuntu16.04.1")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -427,16 +427,16 @@
         (pin (num 5) (name GND) (type power_in))
         (pin (num 6) (name Shield) (type passive)))))
   (libraries
+    (library (logical conn)
+      (uri /usr/share/kicad/library/conn.lib))
     (library (logical diode)
       (uri /usr/share/kicad/library/diode.lib))
+    (library (logical display)
+      (uri /usr/share/kicad/library/display.lib))
     (library (logical device)
       (uri /usr/share/kicad/library/device.lib))
     (library (logical SNES_controller_debugger_1-rescue)
-      (uri /home/ari/SNES_controller_debugger/SNES_controller_debugger_1-rescue.lib))
-    (library (logical display)
-      (uri /usr/share/kicad/library/display.lib))
-    (library (logical conn)
-      (uri /usr/share/kicad/library/conn.lib))
+      (uri /home/ari/SNES_controller_debugger/kicad/SNES_controller_debugger_1-rescue.lib))
     (library (logical switches)
       (uri /usr/share/kicad/library/switches.lib)))
   (nets
