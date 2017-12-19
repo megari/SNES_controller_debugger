@@ -271,6 +271,10 @@ static void lcd_backlight(bool on) {
 }
 
 void main() {
+    // Disable the USB controller. It generates a *lot* of interrupts after a
+    // reset, for some reason.
+    USBCON &= ~_BV(USBE);
+
     // Set PortC7 as input for reading the incoming controller data.
     // Enable pull-up resistors so that the readings show no buttons
     // pressed when there is no controller connected.
