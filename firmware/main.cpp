@@ -376,18 +376,23 @@ void main() {
     // < > SELECT START Y A
     //  v                B
     uint16_t buttons_saved;
+    uint16_t idle_count_saved;
     bool disp_off = false;
     while (1) {
-        buttons_saved = buttons & VALID_BUTTON_MASK;
+        cli();
+        buttons_saved = buttons;
+        idle_count_saved = idle_count;
+        sei();
+        buttons_saved &= VALID_BUTTON_MASK;
 
         // Turn the display driver and backlight off if we're idle
         // TODO: possibly dim the backlight after a smaller amount of time?
-        if (idle_count == IDLE_MAX && !disp_off) {
+        if (idle_count_saved == IDLE_MAX && !disp_off) {
             lcd.display_control(false, false, false);
             lcd_backlight(false);
             disp_off = true;
         }
-        else if (idle_count < IDLE_MAX && disp_off) {
+        else if (idle_count_saved < IDLE_MAX && disp_off) {
             lcd.display_control(true, false, false);
             lcd_backlight(true);
             disp_off = false;
