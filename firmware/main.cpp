@@ -36,6 +36,43 @@ public:
     void power(bool) { }
 };
 
+class Backlight {
+    uint8_t value;
+    PortD0 pin;
+
+    void reset(uint8_t val) {
+        pin.mode = OUTPUT;
+
+        // Fast PWM, non-inverting mode on OC0B (PortD0).
+        // Use a prescaler of 64 to get a bit shy of 1000 Hz.
+        TCCR0A = _BV(COM0B1) | _BV(WGM00) | _BV(WGM01);
+        TCCR0B = 0;
+        TCNT0 = 0;
+        value = val;
+        OCR0B = val;
+        TCCR0B = _BV(CS00) | _BV(CS01);
+    }
+public:
+    Backlight(uint8_t val = 0xff) : value(val) {
+        reset(value);
+    }
+
+    void set(uint8_t val) {
+        if (val == 0) { // Avoid the single spike
+            TCCR0A = 0;
+            TCCR0B = 0;
+            pin = false;
+            value = val;
+        }
+        else if (value == 0)
+            reset(val);
+        else {
+            value = val;
+            OCR0B = val;
+        }
+    }
+};
+
 enum SNES_button {
     BUTTON_B      = 0,
     BUTTON_Y      = 1,
@@ -59,8 +96,10 @@ enum SNES_button {
 volatile uint16_t buttons = 0;
 volatile uint8_t clock_count = 0;
 
+// Dim LCD backlight after 10 seconds, turn it off after 30 seconds.
 volatile uint16_t idle_count = 0;
-#define IDLE_MAX 600
+#define IDLE_DIM 600
+#define IDLE_MAX 1800
 
 // Called on the rising edge of the latch pulse.
 // Nothing here (yet?).
@@ -239,7 +278,7 @@ typedef Pinset<PortB4, PortD7, PortD6, PortD4> FourBitSet;
 typedef PortF5 RSPin;
 typedef PortF6 RWPin;
 typedef PortF7 EPin;
-PowerPin<PortD0> backlight;
+Backlight backlight;
 PowerPin<PortF1, false> power; // The polarity is inverted because of using a P-MOSFET.
 typedef LCDInterface<RSPin, RWPin, EPin, FourBitSet> FourBitInterface;
 // Use an LCD screen with 4 lines, 5x8 font
@@ -266,8 +305,8 @@ static void lcd_power(bool on) {
     }
 }
 
-static void lcd_backlight(bool on) {
-    backlight.power(on);
+static void lcd_backlight(uint8_t val) {
+    backlight.set(val);
 }
 
 void main() {
@@ -377,7 +416,11 @@ void main() {
     //  v                B
     uint16_t buttons_saved;
     uint16_t idle_count_saved;
-    bool disp_off = false;
+    enum {
+        BL_ON,
+        BL_DIMMED,
+        BL_OFF,
+    } backlight_state = BL_ON;
     while (1) {
         cli();
         buttons_saved = buttons;
@@ -385,20 +428,32 @@ void main() {
         sei();
         buttons_saved &= VALID_BUTTON_MASK;
 
-        // Turn the display driver and backlight off if we're idle
-        // TODO: possibly dim the backlight after a smaller amount of time?
-        if (idle_count_saved == IDLE_MAX && !disp_off) {
-            lcd.display_control(false, false, false);
-            lcd_backlight(false);
-            disp_off = true;
-        }
-        else if (idle_count_saved < IDLE_MAX && disp_off) {
-            lcd.display_control(true, false, false);
-            lcd_backlight(true);
-            disp_off = false;
+        // Dim the backlight and eventually turn it off if we're idle
+        switch (backlight_state) {
+        case BL_ON:
+            if (idle_count_saved >= IDLE_DIM) {
+                lcd_backlight(70);
+                backlight_state = BL_DIMMED;
+            }
+            break;
+        case BL_DIMMED:
+            if (idle_count_saved == IDLE_MAX) {
+                lcd.display_control(false, false, false);
+                lcd_backlight(0);
+                backlight_state = BL_OFF;
+                break;
+            }
+            // Intentional fall-through
+        case BL_OFF:
+            if (idle_count_saved < IDLE_DIM) {
+                lcd.display_control(true, false, false);
+                lcd_backlight(255);
+                backlight_state = BL_ON;
+            }
+            break;
         }
 
-        if (disp_off)
+        if (backlight_state == BL_OFF)
             continue;
 
         // First row:
