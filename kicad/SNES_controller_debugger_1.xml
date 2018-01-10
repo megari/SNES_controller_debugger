@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>/home/ari/SNES_controller_debugger/SNES_controller_debugger_1.sch</source>
-    <date>Thu 18 May 2017 10:09:30 PM EEST</date>
-    <tool>Eeschema 4.0.6-e0-6349~53~ubuntu16.04.1</tool>
+    <source>/home/ari/SNES_controller_debugger/kicad/SNES_controller_debugger_1.sch</source>
+    <date>Wed 10 Jan 2018 05:04:01 PM EET</date>
+    <tool>Eeschema 4.0.7-e2-6376~58~ubuntu16.04.1</tool>
     <sheet number="1" name="/" tstamps="/">
       <title_block>
         <title/>
@@ -22,6 +22,10 @@
     <comp ref="U1">
       <value>ATmega32U4</value>
       <footprint>Housings_QFP:TQFP-44_10x10mm_Pitch0.8mm</footprint>
+      <fields>
+        <field name="Digi-Key part number">ATMEGA32U4-AU-ND</field>
+        <field name="MPN">ATMEGA32U4-AU</field>
+      </fields>
       <libsource lib="SNES_controller_debugger_1-rescue" part="ATmega32U4-RESCUE-SNES_controller_debugger_1"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5919C3A0</tstamp>
@@ -29,6 +33,10 @@
     <comp ref="RV1">
       <value>POT</value>
       <footprint>Megaris_fixed_footprints:Potentiometer_Trimmer_Vishay_TS53YL</footprint>
+      <fields>
+        <field name="Digi-Key part number">TS53YL-10KCT-ND</field>
+        <field name="MPN">TS53YL103MR10</field>
+      </fields>
       <libsource lib="device" part="POT"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>591B92F6</tstamp>
@@ -36,21 +44,25 @@
     <comp ref="J1">
       <value>ICSP</value>
       <footprint>Pin_Headers:Pin_Header_Straight_2x03_Pitch2.54mm</footprint>
-      <libsource lib="conn" part="CONN_02X03"/>
+      <libsource lib="SNES_controller_debugger_1-cache" part="CONN_02X03"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>591BC56F</tstamp>
     </comp>
     <comp ref="Y1">
       <value>16MHz</value>
-      <footprint>Crystals:Crystal_HC49-U_Vertical</footprint>
+      <footprint>Crystals:Crystal_SMD_5032-2pin_5.0x3.2mm_HandSoldering</footprint>
+      <fields>
+        <field name="Digi-Key part number">644-1187-1-ND</field>
+        <field name="MPN">NX5032GA-16MHZ-STD-CSK-4</field>
+      </fields>
       <libsource lib="device" part="Crystal"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>591BE397</tstamp>
     </comp>
     <comp ref="J2">
-      <value>CONTROLLER_OUT</value>
+      <value>Controller</value>
       <footprint>SNES_Controller_Port:SNES_controller_port</footprint>
-      <libsource lib="conn" part="CONN_01X07"/>
+      <libsource lib="SNES_controller_debugger_1-cache" part="CONN_01X07"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>591C5A5F</tstamp>
     </comp>
@@ -98,7 +110,11 @@
     </comp>
     <comp ref="J3">
       <value>MICRO_USB</value>
-      <footprint>Conn_MicroUSB:Conn_USBmicro-B_ebay-side_TH</footprint>
+      <footprint>Megaris_fixed_footprints:Conn_USBmicro-B_Amphenol_10118194-0001LF</footprint>
+      <fields>
+        <field name="Digi-Key part number">609-4618-1-ND</field>
+        <field name="MPN">10118194-0001LF</field>
+      </fields>
       <libsource lib="conn" part="USB_OTG"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>591C956F</tstamp>
@@ -111,11 +127,113 @@
       <tstamp>591CC03D</tstamp>
     </comp>
     <comp ref="DS1">
-      <value>LCD16X2</value>
-      <footprint>Pin_Headers:Pin_Header_Straight_1x16_Pitch2.54mm</footprint>
-      <libsource lib="display" part="LCD16X2"/>
+      <value>LCD20X4</value>
+      <footprint>Megaris_fixed_footprints:LCD_2004_Pitch2.54mm</footprint>
+      <libsource lib="SNES_controller_debugger_1-cache" part="LCD16X2"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamp>5919C64C</tstamp>
+    </comp>
+    <comp ref="F1">
+      <value>500mA</value>
+      <footprint>Resistors_SMD:R_0603_HandSoldering</footprint>
+      <libsource lib="device" part="Polyfuse_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>591F832C</tstamp>
+    </comp>
+    <comp ref="SW1">
+      <value>Reset</value>
+      <footprint>Buttons_Switches_THT:SW_PUSH_6mm</footprint>
+      <fields>
+        <field name="Digi-Key part number">679-2428-ND</field>
+        <field name="MPN">MJTP1230</field>
+      </fields>
+      <libsource lib="switches" part="SW_Push"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>591F8680</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>MBR0520</value>
+      <footprint>Diodes_SMD:D_SOD-123</footprint>
+      <libsource lib="diode" part="MBR0520"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>591FB650</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>MBR0520</value>
+      <footprint>Diodes_SMD:D_SOD-123</footprint>
+      <libsource lib="diode" part="MBR0520"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>591FB9FA</tstamp>
+    </comp>
+    <comp ref="C7">
+      <value>1µF</value>
+      <footprint>Capacitors_SMD:C_0603_HandSoldering</footprint>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>59301D5B</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>1µF</value>
+      <footprint>Capacitors_SMD:C_0603_HandSoldering</footprint>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5930241B</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>0.1µF</value>
+      <footprint>Capacitors_SMD:C_0603_HandSoldering</footprint>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5930259D</tstamp>
+    </comp>
+    <comp ref="R6">
+      <value>0</value>
+      <footprint>Resistors_SMD:R_0603_HandSoldering</footprint>
+      <libsource lib="device" part="R_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>598B7C95</tstamp>
+    </comp>
+    <comp ref="R5">
+      <value>220</value>
+      <footprint>Resistors_SMD:R_0603_HandSoldering</footprint>
+      <libsource lib="device" part="R_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>598B82E3</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>1M</value>
+      <footprint>Resistors_SMD:R_0603_HandSoldering</footprint>
+      <libsource lib="device" part="R_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>598C9414</tstamp>
+    </comp>
+    <comp ref="Q2">
+      <value>DMP2215L-7</value>
+      <footprint>TO_SOT_Packages_SMD:SOT-23_Handsoldering</footprint>
+      <libsource lib="device" part="Q_PMOS_GSD"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>599309B5</tstamp>
+    </comp>
+    <comp ref="R7">
+      <value>220</value>
+      <footprint>Resistors_SMD:R_0603_HandSoldering</footprint>
+      <libsource lib="device" part="R_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>598CA9F1</tstamp>
+    </comp>
+    <comp ref="Q1">
+      <value>DMG2302UK-7</value>
+      <footprint>TO_SOT_Packages_SMD:SOT-23_Handsoldering</footprint>
+      <libsource lib="device" part="Q_NMOS_GSD"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>599310CF</tstamp>
+    </comp>
+    <comp ref="R8">
+      <value>1M</value>
+      <footprint>Resistors_SMD:R_0603_HandSoldering</footprint>
+      <libsource lib="device" part="R_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>59933CC8</tstamp>
     </comp>
   </components>
   <libparts>
@@ -175,8 +293,35 @@
         <pin num="44" name="AVCC" type="input"/>
       </pins>
     </libpart>
-    <libpart lib="conn" part="CONN_01X07">
-      <description>Connector, single row, 01x07, pin header</description>
+    <libpart lib="diode" part="BAT48ZFILM">
+      <aliases>
+        <alias>MBR0520LT</alias>
+        <alias>MBR0520</alias>
+        <alias>MBR0530</alias>
+        <alias>MBR0540</alias>
+        <alias>MBR0550</alias>
+        <alias>MBR0560</alias>
+        <alias>MBR0570</alias>
+        <alias>MBR0580</alias>
+        <alias>BAT42W-V</alias>
+        <alias>BAT43W-V</alias>
+      </aliases>
+      <description>40V 0.35A Small Signal Schottky Diode, SOD-123</description>
+      <docs>http://www.st.com/content/ccc/resource/technical/document/datasheet/b2/2f/2a/0c/8b/b5/46/a3/CD00130229.pdf/files/CD00130229.pdf/jcr:content/translations/en.CD00130229.pdf</docs>
+      <footprints>
+        <fp>D*SOD?123*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">BAT48ZFILM</field>
+        <field name="Footprint">Diodes_SMD:SOD-123</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="SNES_controller_debugger_1-cache" part="CONN_01X07">
       <footprints>
         <fp>Pin_Header_Straight_1X*</fp>
         <fp>Pin_Header_Angled_1X*</fp>
@@ -197,8 +342,7 @@
         <pin num="7" name="P7" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="conn" part="CONN_02X03">
-      <description>Connector, double row, 02x03, pin header</description>
+    <libpart lib="SNES_controller_debugger_1-cache" part="CONN_02X03">
       <footprints>
         <fp>Pin_Header_Straight_2X*</fp>
         <fp>Pin_Header_Angled_2X*</fp>
@@ -247,12 +391,10 @@
         <pin num="2" name="2" type="passive"/>
       </pins>
     </libpart>
-    <libpart lib="display" part="LCD16X2">
+    <libpart lib="SNES_controller_debugger_1-cache" part="LCD16X2">
       <aliases>
         <alias>LCD-016N002L</alias>
       </aliases>
-      <description>WC1602A0-SFYLYNC06</description>
-      <docs>http://www.kamami.pl/dl/wc1602a0.pdf</docs>
       <fields>
         <field name="Reference">DS</field>
         <field name="Value">LCD16X2</field>
@@ -278,7 +420,10 @@
       </pins>
     </libpart>
     <libpart lib="device" part="POT">
-      <description>Potentionmeter</description>
+      <description>Potentiometer</description>
+      <footprints>
+        <fp>Potentiometer*</fp>
+      </footprints>
       <fields>
         <field name="Reference">RV</field>
         <field name="Value">POT</field>
@@ -287,6 +432,45 @@
         <pin num="1" name="1" type="passive"/>
         <pin num="2" name="2" type="passive"/>
         <pin num="3" name="3" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="Polyfuse_Small">
+      <description>resettable fuse, polymeric positive temperature coefficient (PPTC), small symbol</description>
+      <footprints>
+        <fp>*polyfuse*</fp>
+        <fp>*PTC*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">F</field>
+        <field name="Value">Polyfuse_Small</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="Q_NMOS_GSD">
+      <description>Transistor N-MOSFETwith substrate diode (general)</description>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">Q_NMOS_GSD</field>
+      </fields>
+      <pins>
+        <pin num="1" name="G" type="input"/>
+        <pin num="2" name="S" type="passive"/>
+        <pin num="3" name="D" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="Q_PMOS_GSD">
+      <description>Transistor P-MOSFET with substrate diode (general)</description>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">Q_PMOS_GSD</field>
+      </fields>
+      <pins>
+        <pin num="1" name="G" type="input"/>
+        <pin num="2" name="S" type="passive"/>
+        <pin num="3" name="D" type="passive"/>
       </pins>
     </libpart>
     <libpart lib="device" part="R_Small">
@@ -301,6 +485,17 @@
       <pins>
         <pin num="1" name="~" type="passive"/>
         <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="switches" part="SW_Push">
+      <description>Push button switch, generic, two pins</description>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SW_Push</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
       </pins>
     </libpart>
     <libpart lib="conn" part="USB_OTG">
@@ -323,207 +518,257 @@
     </libpart>
   </libparts>
   <libraries>
-    <library logical="device">
-      <uri>/usr/share/kicad/library/device.lib</uri>
+    <library logical="SNES_controller_debugger_1-cache">
+      <uri>/home/ari/SNES_controller_debugger/kicad/SNES_controller_debugger_1-cache.lib</uri>
+    </library>
+    <library logical="switches">
+      <uri>/usr/share/kicad/library/switches.lib</uri>
+    </library>
+    <library logical="SNES_controller_debugger_1-rescue">
+      <uri>/home/ari/SNES_controller_debugger/kicad/SNES_controller_debugger_1-rescue.lib</uri>
+    </library>
+    <library logical="diode">
+      <uri>/usr/share/kicad/library/diode.lib</uri>
     </library>
     <library logical="conn">
       <uri>/usr/share/kicad/library/conn.lib</uri>
     </library>
-    <library logical="SNES_controller_debugger_1-rescue">
-      <uri>/home/ari/SNES_controller_debugger/SNES_controller_debugger_1-rescue.lib</uri>
-    </library>
-    <library logical="display">
-      <uri>/usr/share/kicad/library/display.lib</uri>
+    <library logical="device">
+      <uri>/usr/share/kicad/library/device.lib</uri>
     </library>
   </libraries>
   <nets>
-    <net code="1" name="Net-(U1-Pad20)">
-      <node ref="U1" pin="20"/>
+    <net code="1" name="Net-(J3-Pad2)">
+      <node ref="R3" pin="1"/>
+      <node ref="J3" pin="2"/>
     </net>
-    <net code="2" name="Net-(DS1-Pad9)">
-      <node ref="DS1" pin="9"/>
+    <net code="2" name="Net-(C1-Pad1)">
+      <node ref="C1" pin="1"/>
+      <node ref="U1" pin="42"/>
     </net>
-    <net code="3" name="Net-(DS1-Pad10)">
-      <node ref="DS1" pin="10"/>
+    <net code="3" name="UVCC">
+      <node ref="U1" pin="2"/>
+      <node ref="F1" pin="1"/>
+      <node ref="U1" pin="7"/>
+      <node ref="D2" pin="2"/>
     </net>
-    <net code="4" name="LCD_D6">
-      <node ref="DS1" pin="13"/>
-      <node ref="U1" pin="26"/>
+    <net code="4" name="IVCC">
+      <node ref="J1" pin="2"/>
+      <node ref="D1" pin="2"/>
     </net>
-    <net code="5" name="LCD_D7">
-      <node ref="U1" pin="25"/>
-      <node ref="DS1" pin="14"/>
+    <net code="5" name="Net-(F1-Pad2)">
+      <node ref="J3" pin="1"/>
+      <node ref="F1" pin="2"/>
     </net>
     <net code="6" name="Earth">
-      <node ref="J1" pin="6"/>
-      <node ref="DS1" pin="1"/>
-      <node ref="U1" pin="23"/>
-      <node ref="U1" pin="43"/>
-      <node ref="U1" pin="5"/>
-      <node ref="U1" pin="15"/>
-      <node ref="U1" pin="35"/>
-      <node ref="J2" pin="7"/>
-      <node ref="RV1" pin="1"/>
-      <node ref="C2" pin="2"/>
-      <node ref="C3" pin="2"/>
+      <node ref="R4" pin="2"/>
       <node ref="C1" pin="2"/>
-      <node ref="DS1" pin="16"/>
       <node ref="J3" pin="5"/>
       <node ref="J3" pin="6"/>
+      <node ref="J2" pin="7"/>
+      <node ref="C2" pin="2"/>
+      <node ref="C3" pin="2"/>
+      <node ref="RV1" pin="1"/>
       <node ref="C4" pin="2"/>
-    </net>
-    <net code="7" name="Net-(U1-Pad21)">
-      <node ref="U1" pin="21"/>
-    </net>
-    <net code="8" name="Net-(DS1-Pad8)">
-      <node ref="DS1" pin="8"/>
-    </net>
-    <net code="9" name="UVCC">
-      <node ref="U1" pin="7"/>
-      <node ref="U1" pin="44"/>
-      <node ref="U1" pin="34"/>
-      <node ref="U1" pin="2"/>
-      <node ref="RV1" pin="3"/>
-      <node ref="R1" pin="1"/>
-      <node ref="U1" pin="14"/>
-      <node ref="DS1" pin="15"/>
-      <node ref="J1" pin="2"/>
-      <node ref="J2" pin="1"/>
-      <node ref="U1" pin="24"/>
-      <node ref="DS1" pin="2"/>
-      <node ref="J3" pin="1"/>
-    </net>
-    <net code="10" name="Net-(U1-Pad12)">
-      <node ref="U1" pin="12"/>
-    </net>
-    <net code="11" name="Net-(J3-Pad4)">
-      <node ref="J3" pin="4"/>
-    </net>
-    <net code="12" name="Net-(C4-Pad1)">
-      <node ref="U1" pin="6"/>
-      <node ref="C4" pin="1"/>
-    </net>
-    <net code="13" name="Net-(U1-Pad39)">
-      <node ref="U1" pin="39"/>
-    </net>
-    <net code="14" name="Net-(U1-Pad40)">
-      <node ref="U1" pin="40"/>
-    </net>
-    <net code="15" name="Net-(U1-Pad41)">
-      <node ref="U1" pin="41"/>
-    </net>
-    <net code="16" name="Net-(U1-Pad1)">
-      <node ref="U1" pin="1"/>
-    </net>
-    <net code="17" name="Net-(U1-Pad33)">
+      <node ref="DS1" pin="1"/>
+      <node ref="U1" pin="23"/>
       <node ref="U1" pin="33"/>
+      <node ref="U1" pin="43"/>
+      <node ref="U1" pin="15"/>
+      <node ref="U1" pin="35"/>
+      <node ref="U1" pin="5"/>
+      <node ref="J1" pin="6"/>
+      <node ref="C7" pin="2"/>
+      <node ref="C5" pin="2"/>
+      <node ref="C6" pin="2"/>
+      <node ref="SW1" pin="1"/>
+      <node ref="Q1" pin="2"/>
     </net>
-    <net code="18" name="Net-(U1-Pad22)">
+    <net code="7" name="Net-(Q1-Pad3)">
+      <node ref="Q1" pin="3"/>
+      <node ref="R6" pin="2"/>
+    </net>
+    <net code="8" name="Net-(Q1-Pad1)">
+      <node ref="R5" pin="2"/>
+      <node ref="Q1" pin="1"/>
+    </net>
+    <net code="9" name="Net-(Q2-Pad1)">
+      <node ref="R7" pin="2"/>
+      <node ref="Q2" pin="1"/>
+    </net>
+    <net code="10" name="Net-(U1-Pad22)">
       <node ref="U1" pin="22"/>
     </net>
-    <net code="19" name="Net-(U1-Pad18)">
-      <node ref="U1" pin="18"/>
+    <net code="11" name="Net-(DS1-Pad16)">
+      <node ref="R6" pin="1"/>
+      <node ref="DS1" pin="16"/>
     </net>
-    <net code="20" name="Net-(U1-Pad30)">
-      <node ref="U1" pin="30"/>
+    <net code="12" name="Net-(U1-Pad19)">
+      <node ref="U1" pin="19"/>
     </net>
-    <net code="21" name="Net-(U1-Pad8)">
-      <node ref="U1" pin="8"/>
+    <net code="13" name="LCD_PWR">
+      <node ref="R7" pin="1"/>
+      <node ref="U1" pin="40"/>
+      <node ref="R8" pin="1"/>
     </net>
-    <net code="22" name="Net-(DS1-Pad3)">
+    <net code="14" name="Net-(DS1-Pad2)">
+      <node ref="RV1" pin="3"/>
+      <node ref="Q2" pin="3"/>
+      <node ref="DS1" pin="2"/>
+    </net>
+    <net code="15" name="Net-(DS1-Pad3)">
       <node ref="DS1" pin="3"/>
       <node ref="RV1" pin="2"/>
     </net>
-    <net code="23" name="Net-(DS1-Pad7)">
-      <node ref="DS1" pin="7"/>
+    <net code="16" name="Net-(C4-Pad1)">
+      <node ref="U1" pin="6"/>
+      <node ref="C4" pin="1"/>
     </net>
-    <net code="24" name="Net-(U1-Pad19)">
-      <node ref="U1" pin="19"/>
+    <net code="17" name="D+">
+      <node ref="U1" pin="4"/>
+      <node ref="R2" pin="2"/>
     </net>
-    <net code="25" name="Net-(J3-Pad2)">
-      <node ref="J3" pin="2"/>
-      <node ref="R3" pin="1"/>
-    </net>
-    <net code="26" name="Net-(J3-Pad3)">
+    <net code="18" name="Net-(J3-Pad3)">
       <node ref="R2" pin="1"/>
       <node ref="J3" pin="3"/>
     </net>
-    <net code="27" name="Net-(C1-Pad1)">
-      <node ref="U1" pin="42"/>
-      <node ref="C1" pin="1"/>
+    <net code="19" name="Net-(DS1-Pad10)">
+      <node ref="DS1" pin="10"/>
     </net>
-    <net code="28" name="LCD_E">
-      <node ref="U1" pin="36"/>
-      <node ref="DS1" pin="6"/>
+    <net code="20" name="Net-(DS1-Pad9)">
+      <node ref="DS1" pin="9"/>
     </net>
-    <net code="29" name="LCD_D5">
-      <node ref="U1" pin="27"/>
-      <node ref="DS1" pin="12"/>
+    <net code="21" name="Net-(DS1-Pad8)">
+      <node ref="DS1" pin="8"/>
     </net>
-    <net code="30" name="LCD_RW">
-      <node ref="U1" pin="37"/>
-      <node ref="DS1" pin="5"/>
+    <net code="22" name="Net-(DS1-Pad7)">
+      <node ref="DS1" pin="7"/>
     </net>
-    <net code="31" name="LCD_D4">
-      <node ref="U1" pin="28"/>
-      <node ref="DS1" pin="11"/>
+    <net code="23" name="Net-(U1-Pad39)">
+      <node ref="U1" pin="39"/>
     </net>
-    <net code="32" name="LCD_RS">
-      <node ref="U1" pin="38"/>
+    <net code="24" name="LATCH_OUT">
+      <node ref="J2" pin="3"/>
+      <node ref="U1" pin="29"/>
+    </net>
+    <net code="25" name="RESET">
+      <node ref="J1" pin="5"/>
+      <node ref="R1" pin="2"/>
+      <node ref="U1" pin="13"/>
+      <node ref="SW1" pin="2"/>
+    </net>
+    <net code="26" name="LCD_RS">
       <node ref="DS1" pin="4"/>
+      <node ref="U1" pin="38"/>
     </net>
-    <net code="33" name="D-">
-      <node ref="R3" pin="2"/>
-      <node ref="U1" pin="3"/>
-    </net>
-    <net code="34" name="D+">
-      <node ref="R2" pin="2"/>
-      <node ref="U1" pin="4"/>
-    </net>
-    <net code="35" name="SCLK">
-      <node ref="J1" pin="3"/>
+    <net code="27" name="SCLK">
       <node ref="U1" pin="9"/>
+      <node ref="J1" pin="3"/>
+    </net>
+    <net code="28" name="MISO">
+      <node ref="J1" pin="1"/>
+      <node ref="U1" pin="11"/>
+    </net>
+    <net code="29" name="Net-(U1-Pad20)">
+      <node ref="U1" pin="20"/>
+    </net>
+    <net code="30" name="DATA_IN">
+      <node ref="J2" pin="4"/>
+      <node ref="U1" pin="32"/>
+    </net>
+    <net code="31" name="Net-(U1-Pad12)">
+      <node ref="U1" pin="12"/>
+    </net>
+    <net code="32" name="Net-(U1-Pad41)">
+      <node ref="U1" pin="41"/>
+    </net>
+    <net code="33" name="CLK_OUT">
+      <node ref="U1" pin="31"/>
+      <node ref="J2" pin="2"/>
+    </net>
+    <net code="34" name="Net-(U1-Pad21)">
+      <node ref="U1" pin="21"/>
+    </net>
+    <net code="35" name="Net-(U1-Pad30)">
+      <node ref="U1" pin="30"/>
     </net>
     <net code="36" name="MOSI">
       <node ref="J1" pin="4"/>
       <node ref="U1" pin="10"/>
     </net>
-    <net code="37" name="MISO">
-      <node ref="J1" pin="1"/>
-      <node ref="U1" pin="11"/>
+    <net code="37" name="Net-(U1-Pad8)">
+      <node ref="U1" pin="8"/>
     </net>
-    <net code="38" name="DATA_IN">
-      <node ref="J2" pin="4"/>
-      <node ref="U1" pin="32"/>
+    <net code="38" name="D-">
+      <node ref="R3" pin="2"/>
+      <node ref="U1" pin="3"/>
     </net>
-    <net code="39" name="Net-(J2-Pad6)">
-      <node ref="J2" pin="6"/>
+    <net code="39" name="LCD_D7">
+      <node ref="U1" pin="25"/>
+      <node ref="DS1" pin="14"/>
     </net>
-    <net code="40" name="Net-(J2-Pad5)">
+    <net code="40" name="LCD_LED">
+      <node ref="R5" pin="1"/>
+      <node ref="R4" pin="1"/>
+      <node ref="U1" pin="18"/>
+    </net>
+    <net code="41" name="LCD_RW">
+      <node ref="U1" pin="37"/>
+      <node ref="DS1" pin="5"/>
+    </net>
+    <net code="42" name="LCD_D6">
+      <node ref="DS1" pin="13"/>
+      <node ref="U1" pin="26"/>
+    </net>
+    <net code="43" name="LCD_D5">
+      <node ref="DS1" pin="12"/>
+      <node ref="U1" pin="27"/>
+    </net>
+    <net code="44" name="LCD_D4">
+      <node ref="DS1" pin="11"/>
+      <node ref="U1" pin="28"/>
+    </net>
+    <net code="45" name="LCD_E">
+      <node ref="DS1" pin="6"/>
+      <node ref="U1" pin="36"/>
+    </net>
+    <net code="46" name="Net-(U1-Pad1)">
+      <node ref="U1" pin="1"/>
+    </net>
+    <net code="47" name="Net-(J2-Pad5)">
       <node ref="J2" pin="5"/>
     </net>
-    <net code="41" name="RESET">
-      <node ref="U1" pin="13"/>
-      <node ref="J1" pin="5"/>
-      <node ref="R1" pin="2"/>
+    <net code="48" name="Net-(J2-Pad6)">
+      <node ref="J2" pin="6"/>
     </net>
-    <net code="42" name="Net-(C2-Pad1)">
-      <node ref="U1" pin="16"/>
+    <net code="49" name="VCC">
+      <node ref="J2" pin="1"/>
+      <node ref="DS1" pin="15"/>
+      <node ref="Q2" pin="2"/>
+      <node ref="R1" pin="1"/>
+      <node ref="C6" pin="1"/>
+      <node ref="D2" pin="1"/>
+      <node ref="R8" pin="2"/>
+      <node ref="D1" pin="1"/>
+      <node ref="C5" pin="1"/>
+      <node ref="C7" pin="1"/>
+      <node ref="U1" pin="14"/>
+      <node ref="U1" pin="24"/>
+      <node ref="U1" pin="34"/>
+      <node ref="U1" pin="44"/>
+    </net>
+    <net code="50" name="Net-(C3-Pad1)">
+      <node ref="C3" pin="1"/>
+      <node ref="Y1" pin="2"/>
+      <node ref="U1" pin="17"/>
+    </net>
+    <net code="51" name="Net-(C2-Pad1)">
       <node ref="Y1" pin="1"/>
       <node ref="C2" pin="1"/>
+      <node ref="U1" pin="16"/>
     </net>
-    <net code="43" name="Net-(C3-Pad1)">
-      <node ref="U1" pin="17"/>
-      <node ref="Y1" pin="2"/>
-      <node ref="C3" pin="1"/>
-    </net>
-    <net code="44" name="CLK_OUT">
-      <node ref="U1" pin="31"/>
-      <node ref="J2" pin="2"/>
-    </net>
-    <net code="45" name="LATCH_OUT">
-      <node ref="U1" pin="29"/>
-      <node ref="J2" pin="3"/>
+    <net code="52" name="Net-(J3-Pad4)">
+      <node ref="J3" pin="4"/>
     </net>
   </nets>
 </export>

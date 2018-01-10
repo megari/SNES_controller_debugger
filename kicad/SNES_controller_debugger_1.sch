@@ -47,12 +47,10 @@ LIBS:elec-unifil
 LIBS:ESD_Protection
 LIBS:ftdi
 LIBS:gennum
-LIBS:graphic
 LIBS:hc11
 LIBS:ir
 LIBS:Lattice
 LIBS:leds
-LIBS:logo
 LIBS:maxim
 LIBS:mechanical
 LIBS:microchip_dspic33dsc
@@ -213,7 +211,7 @@ L CONN_01X07 J2
 U 1 1 591C5A5F
 P 6200 5650
 F 0 "J2" H 6200 6050 50  0000 C CNN
-F 1 "CONTROLLER_OUT" V 6300 5650 50  0000 C CNN
+F 1 "Controller" V 6300 5650 50  0000 C CNN
 F 2 "SNES_Controller_Port:SNES_controller_port" H 6200 5650 50  0001 C CNN
 F 3 "" H 6200 5650 50  0001 C CNN
 	1    6200 5650
@@ -466,7 +464,7 @@ L SW_Push SW1
 U 1 1 591F8680
 P 1050 3300
 F 0 "SW1" H 1100 3400 50  0000 L CNN
-F 1 "Reset_switch" H 1050 3240 50  0001 C CNN
+F 1 "Reset" H 1050 3240 50  0001 C CNN
 F 2 "Buttons_Switches_THT:SW_PUSH_6mm" H 1050 3500 50  0001 C CNN
 F 3 "" H 1050 3500 50  0001 C CNN
 F 4 "679-2428-ND" H 1050 3300 60  0001 C CNN "Digi-Key part number"
