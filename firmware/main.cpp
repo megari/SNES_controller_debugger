@@ -95,11 +95,66 @@ enum SNES_button {
 
 volatile uint16_t buttons = 0;
 volatile uint8_t clock_count = 0;
+volatile bool clock_running = false;
+
+enum Region : bool {
+    REGION_NTSC = false,
+    REGION_PAL  = true,
+};
+volatile Region region;
 
 // Dim LCD backlight after 10 seconds, turn it off after 30 seconds.
 volatile uint16_t idle_count = 0;
 #define IDLE_DIM 600
 #define IDLE_MAX 1800
+
+/*
+ * Some notes:
+ * In a PAL controller, there are two pull-up resistors: R1 and R2.
+ * R1 pulls the data clock high. About 1.1 kohm.
+ * R2 pulls the data latch high. About 2.45 kohm.
+ * There are also two "strips resistors" (for the lack of a better term) through
+ * which the data clock and data latch go through to the shift register. These
+ * seem to be about 240-280 ohm. Let's call them RX and RY.
+ * Let's call the clock and latch inputs of the shift register CHIP_CLK_IN and
+ * CHIP_LATCH_IN, respectively.
+ *
+ *  CHIP_CLK_IN        CHIP_LATCH_IN
+ *            |        |
+ *            RX       RY
+ *            |        |
+ * 5V--+--R1--+--CLK   |
+ *     |               |
+ *     |      +--------+
+ *     |      |
+ *     +--R2--+--LATCH
+ *
+ * On the console side we have as follows:
+ * - PAL SNES
+ *   - clock and latch can *not* be pulled up by the console (diodes prevent
+ *     this)
+ *   - clock and latch *can* be pulled down by the console
+ *   - PAL controllers work fine
+ *     - When latch or clock is high on the console side, the controller side
+ *       pull-up resistors pull it high on the controller side
+ *     - When latch or clock is low on the console side, the console pulls them
+ *       down on the controller side as well
+ *   - NTSC controllers do not work because they do not pull anything up
+ *     - When the latch or clock is high on the console side, both appear as
+ *       tri-state/low on the controller side
+ *     - When the latch or clock is low on the console side, it is also low on
+ *       the controller side
+ * - NTSC SNES
+ *   - clock and latch can be pulled both up and down by the console
+ *   - PAL controllers work fine
+ *     - When the latch or clock is high on the console side, both the console
+ *       and the controller are pulling it up
+ *     - When the latch or clock is low on the console side, the controller can
+ *       not pull it up
+ *   - NTSC controllers work fine
+ *     - The console completely controls whether the latch or clock is high or
+ *       low
+ */
 
 // Called on the rising edge of the latch pulse.
 // Nothing here (yet?).
@@ -112,8 +167,14 @@ ISR(TIMER1_COMPA_vect) {
 ISR(TIMER1_OVF_vect) {
     // Start the timer for the clock in non-inverting fast PWM mode,
     // with no prescaler.
+    // Be sure to to enable the pull-up before changing the direction
+    // of the pin, as otherwise the clock will glitch and confuse the
+    // controller.
+    PORTC |= _BV(PORTC6);
+    DDRC |= _BV(DDC6);
     TCCR3A |= _BV(COM3A1);
     TCCR3B |= _BV(CS30);
+    clock_running = true;
 
     buttons = 0;
 }
@@ -133,12 +194,23 @@ ISR(TIMER3_OVF_vect) {
         TCCR3B &= ~(_BV(CS30));
         TCNT3 = 0;
 
+        // We need to set the pin low before setting the direction
+        // to input, for some reason - otherwise subsequent reads
+        // from PINC will just report a high logic level even if
+        // nothing is driving the pin high!
+        PORTC &= ~_BV(PORTC6);
+        DDRC &= ~_BV(DDC6);
+
+        clock_running = false;
         clock_count = 0;
 
         if (idle_count < IDLE_MAX && !(buttons & VALID_BUTTON_MASK))
             idle_count++;
-        else if (buttons & VALID_BUTTON_MASK)
-            idle_count = 0;
+        else if (buttons & VALID_BUTTON_MASK) {
+            if (idle_count > 0) {
+                idle_count = 0;
+            }
+        }
     }
 }
 
@@ -422,7 +494,14 @@ void main() {
         BL_OFF,
     } backlight_state = BL_ON;
     while (1) {
+        // Wait until we are in a period where the clock is not running.
+        while (clock_running) ;
+
         cli();
+        // Detect whether the controller has a pull-up resistor
+        // for the clock line. If it does, it is a PAL controller.
+        region = Region(!!(PINC & _BV(PINC6)));
+
         buttons_saved = buttons;
         idle_count_saved = idle_count;
         sei();
@@ -462,6 +541,14 @@ void main() {
             lcd.put_char('L');
         else
             lcd.put_char(' ');
+
+#if 1
+        lcd.set_cursor_pos(0, 8);
+        if (region == REGION_PAL)
+            lcd.put_string("PAL ");
+        else
+            lcd.put_string("NTSC");
+#endif
 
         lcd.set_cursor_pos(0, 15);
         if (buttons_saved & (1 << BUTTON_R))
