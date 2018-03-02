@@ -562,7 +562,8 @@ void main() {
 
         if ((buttons_saved == MODEL_SWITCH_BUTTONS_1 ||
                 buttons_saved == MODEL_SWITCH_BUTTONS_2) &&
-                buttons_saved != old_buttons) {
+                old_buttons != MODEL_SWITCH_BUTTONS_1 &&
+                old_buttons != MODEL_SWITCH_BUTTONS_2) {
             cli();
             model = Model(!model);
             if (model == MODEL_SNES) {
