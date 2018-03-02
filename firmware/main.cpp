@@ -73,27 +73,51 @@ public:
     }
 };
 
-enum SNES_button {
-    BUTTON_B      = 0,
-    BUTTON_Y      = 1,
+enum common_button {
     BUTTON_SELECT = 2,
     BUTTON_START  = 3,
     BUTTON_UP     = 4,
     BUTTON_DOWN   = 5,
     BUTTON_LEFT   = 6,
     BUTTON_RIGHT  = 7,
-    BUTTON_A      = 8,
-    BUTTON_X      = 9,
-    BUTTON_L      = 10,
-    BUTTON_R      = 11,
-    BUTTON_NONE1  = 12,
-    BUTTON_NONE2  = 13,
-    BUTTON_NONE3  = 14,
-    BUTTON_NONE4  = 15,
-    VALID_BUTTON_MASK = (1 << BUTTON_NONE1) - 1,
 };
 
+enum SNES_button {
+    SNES_BUTTON_B      = 0,
+    SNES_BUTTON_Y      = 1,
+    SNES_BUTTON_A      = 8,
+    SNES_BUTTON_X      = 9,
+    SNES_BUTTON_L      = 10,
+    SNES_BUTTON_R      = 11,
+    SNES_BUTTON_NONE1  = 12,
+    SNES_BUTTON_NONE2  = 13,
+    SNES_BUTTON_NONE3  = 14,
+    SNES_BUTTON_NONE4  = 15,
+    SNES_VALID_BUTTON_MASK = (1 << SNES_BUTTON_NONE1) - 1,
+};
+
+enum NES_button {
+    NES_BUTTON_A        = 0,
+    NES_BUTTON_B        = 1,
+    NES_VALID_BUTTON_MASK = (1 << (BUTTON_RIGHT + 1)) - 1,
+};
+
+#define MODEL_SWITCH_BUTTONS_1 ((1<<BUTTON_SELECT)|(1<<NES_BUTTON_A))
+#define MODEL_SWITCH_BUTTONS_2 \
+    (MODEL_SWITCH_BUTTONS_1|(1<<SNES_BUTTON_L)|(1<<SNES_BUTTON_R)| \
+        (1<<SNES_BUTTON_X)|(1<<SNES_BUTTON_A))
+enum Model : bool {
+    MODEL_NES = false,
+    MODEL_SNES = true,
+};
+volatile Model model = MODEL_SNES;
+volatile uint16_t valid_button_mask = SNES_VALID_BUTTON_MASK;
+
 volatile uint16_t buttons = 0;
+
+#define CLOCK_LIMIT_SNES 16;
+#define CLOCK_LIMIT_NES   8;
+volatile uint8_t clock_limit = CLOCK_LIMIT_SNES;
 volatile uint8_t clock_count = 0;
 volatile bool clock_running = false;
 
@@ -188,7 +212,7 @@ ISR(TIMER3_COMPA_vect) {
 
 // Called on the rising edge of the clock.
 ISR(TIMER3_OVF_vect) {
-    if (++clock_count == 16) {
+    if (++clock_count >= clock_limit) {
         // Stop the timer and reset everything.
         TCCR3A &= ~(_BV(COM3A1));
         TCCR3B &= ~(_BV(CS30));
@@ -204,9 +228,9 @@ ISR(TIMER3_OVF_vect) {
         clock_running = false;
         clock_count = 0;
 
-        if (idle_count < IDLE_MAX && !(buttons & VALID_BUTTON_MASK))
+        if (idle_count < IDLE_MAX && !(buttons & valid_button_mask))
             idle_count++;
-        else if (buttons & VALID_BUTTON_MASK) {
+        else if (buttons & valid_button_mask) {
             if (idle_count > 0) {
                 idle_count = 0;
             }
@@ -486,6 +510,7 @@ void main() {
     //  ^                X
     // < > SELECT START Y A
     //  v                B
+    uint16_t old_buttons = 0;
     uint16_t buttons_saved;
     uint16_t idle_count_saved;
     enum {
@@ -505,7 +530,7 @@ void main() {
         buttons_saved = buttons;
         idle_count_saved = idle_count;
         sei();
-        buttons_saved &= VALID_BUTTON_MASK;
+        buttons_saved &= valid_button_mask;
 
         // Dim the backlight and eventually turn it off if we're idle
         switch (backlight_state) {
@@ -535,26 +560,50 @@ void main() {
         if (backlight_state == BL_OFF)
             continue;
 
+        if ((buttons_saved == MODEL_SWITCH_BUTTONS_1 ||
+                buttons_saved == MODEL_SWITCH_BUTTONS_2) &&
+                buttons_saved != old_buttons) {
+            cli();
+            model = Model(!model);
+            if (model == MODEL_SNES) {
+                clock_limit = CLOCK_LIMIT_SNES;
+                valid_button_mask = SNES_VALID_BUTTON_MASK;
+            } else {
+                clock_limit = CLOCK_LIMIT_NES;
+                valid_button_mask = NES_VALID_BUTTON_MASK;
+            }
+            sei();
+            lcd.clear();
+        }
+        old_buttons = buttons_saved;
+
         // First row:
-        lcd.set_cursor_pos(0, 4);
-        if (buttons_saved & (1 << BUTTON_L))
-            lcd.put_char('L');
-        else
-            lcd.put_char(' ');
+        if (model == MODEL_SNES) {
+            lcd.set_cursor_pos(0, 4);
+            if (buttons_saved & (1 << SNES_BUTTON_L))
+                lcd.put_char('L');
+            else
+                lcd.put_char(' ');
+        }
 
-#if 1
-        lcd.set_cursor_pos(0, 8);
+        lcd.set_cursor_pos(0, 6);
         if (region == REGION_PAL)
-            lcd.put_string("PAL ");
+            lcd.put_string("PAL  ");
         else
-            lcd.put_string("NTSC");
-#endif
+            lcd.put_string("NTSC ");
 
-        lcd.set_cursor_pos(0, 15);
-        if (buttons_saved & (1 << BUTTON_R))
-            lcd.put_char('R');
+        if (model == MODEL_SNES)
+            lcd.put_string("SFC");
         else
-            lcd.put_char(' ');
+            lcd.put_string("NES");
+
+        if (model == MODEL_SNES) {
+            lcd.set_cursor_pos(0, 15);
+            if (buttons_saved & (1 << SNES_BUTTON_R))
+                lcd.put_char('R');
+            else
+                lcd.put_char(' ');
+        }
 
         // Second row:
         lcd.set_cursor_pos(1, 1);
@@ -563,11 +612,13 @@ void main() {
         else
             lcd.put_char(' ');
 
-        lcd.set_cursor_pos(1, 18);
-        if (buttons_saved & (1 << BUTTON_X))
-            lcd.put_char('X');
-        else
-            lcd.put_char(' ');
+        if (model == MODEL_SNES) {
+            lcd.set_cursor_pos(1, 18);
+            if (buttons_saved & (1 << SNES_BUTTON_X))
+                lcd.put_char('X');
+            else
+                lcd.put_char(' ');
+        }
 
         // Third row:
         lcd.set_cursor_pos(2, 0);
@@ -593,16 +644,29 @@ void main() {
             lcd.put_string("      ");
 
         lcd.set_cursor_pos(2, 17);
-        if (buttons_saved & (1 << BUTTON_Y))
-            lcd.put_char('Y');
-        else
-            lcd.put_char(' ');
+        if (model == MODEL_SNES) {
+            if (buttons_saved & (1 << SNES_BUTTON_Y))
+                lcd.put_char('Y');
+            else
+                lcd.put_char(' ');
 
-        lcd.put_char(' ');
-        if (buttons_saved & (1 << BUTTON_A))
-            lcd.put_char('A');
-        else
             lcd.put_char(' ');
+            if (buttons_saved & (1 << SNES_BUTTON_A))
+                lcd.put_char('A');
+            else
+                lcd.put_char(' ');
+        } else {
+            if (buttons_saved & (1 << NES_BUTTON_B))
+                lcd.put_char('B');
+            else
+                lcd.put_char(' ');
+
+            lcd.put_char(' ');
+            if (buttons_saved & (1 << NES_BUTTON_A))
+                lcd.put_char('A');
+            else
+                lcd.put_char(' ');
+        }
 
         // Fourth row:
         lcd.set_cursor_pos(3, 1);
@@ -611,10 +675,12 @@ void main() {
         else
             lcd.put_char(' ');
 
-        lcd.set_cursor_pos(3, 18);
-        if (buttons_saved & (1 << BUTTON_B))
-            lcd.put_char('B');
-        else
-            lcd.put_char(' ');
+        if (model == MODEL_SNES) {
+            lcd.set_cursor_pos(3, 18);
+            if (buttons_saved & (1 << SNES_BUTTON_B))
+                lcd.put_char('B');
+            else
+                lcd.put_char(' ');
+        }
     }
 }
