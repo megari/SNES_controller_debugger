@@ -505,11 +505,19 @@ void main() {
             lcd.put_char(arrow_glyphs[glyph][row]);
     }
 
-    // Now, draw the following (requires a 2004 LCD):
-    //     L          R
+    // Now, draw the following (requires a 2004 LCD).
+    //
+    // For SNES:
+    //    L  PAL  SFC  R
     //  ^                X
     // < > SELECT START Y A
     //  v                B
+    //
+    // For NES:
+    //       PAL  NES
+    //  ^
+    // < > SELECT START B A
+    //  v
     uint16_t old_buttons = 0;
     uint16_t buttons_saved;
     uint16_t idle_count_saved;
@@ -580,7 +588,7 @@ void main() {
 
         // First row:
         if (model == MODEL_SNES) {
-            lcd.set_cursor_pos(0, 4);
+            lcd.set_cursor_pos(0, 3);
             if (buttons_saved & (1 << SNES_BUTTON_L))
                 lcd.put_char('L');
             else
@@ -599,7 +607,7 @@ void main() {
             lcd.put_string("NES");
 
         if (model == MODEL_SNES) {
-            lcd.set_cursor_pos(0, 15);
+            lcd.set_cursor_pos(0, 16);
             if (buttons_saved & (1 << SNES_BUTTON_R))
                 lcd.put_char('R');
             else
